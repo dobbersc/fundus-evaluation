@@ -4,8 +4,9 @@ from typing import Any, Dict, List, Protocol
 
 class Extractor(Protocol):
     """Protocol for extraction functions."""
+    __name__: str
 
-    def __call__(self, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
+    def __call__(self, *, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
         ...
 
 

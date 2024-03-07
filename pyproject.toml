@@ -71,6 +71,10 @@ module = "fundus.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
+module = "jiwer.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
 module = "newsplease.*"
 ignore_missing_imports = true
 

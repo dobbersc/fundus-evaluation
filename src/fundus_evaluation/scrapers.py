@@ -1,10 +1,11 @@
 import functools
 from datetime import datetime
-from typing import Any, Dict, List, Protocol
+from typing import Any, Dict, List, Protocol, runtime_checkable
 
 from fundus_evaluation.utils import normalize_whitespaces
 
 
+@runtime_checkable
 class Scraper(Protocol):
     """Protocol for scraping functions. The function name should have the prefix 'scrape_'."""
 

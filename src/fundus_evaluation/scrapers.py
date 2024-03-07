@@ -7,11 +7,11 @@ from fundus_evaluation.utils import normalize_whitespaces
 
 class Scraper(Protocol):
     """Protocol for scraping functions. The function name should have the prefix 'scrape_'."""
+
     __name__: str
 
     def __call__(self, *, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
         ...
-
 
 
 def _normalize_whitespaces(scraper: Scraper) -> Scraper:

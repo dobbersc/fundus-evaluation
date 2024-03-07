@@ -5,8 +5,8 @@ from typing import Any, Dict, List, Protocol
 from fundus_evaluation.utils import normalize_whitespaces
 
 
-class Extractor(Protocol):
-    """Protocol for extraction functions."""
+class Scraper(Protocol):
+    """Protocol for scraping functions. The function name should have the prefix 'scrape_'."""
     __name__: str
 
     def __call__(self, *, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
@@ -14,14 +14,14 @@ class Extractor(Protocol):
 
 
 
-def _normalize_whitespaces(extractor: Extractor) -> Extractor:
-    """Decorator to normalize whitespaces for an extractor callable."""
+def _normalize_whitespaces(scraper: Scraper) -> Scraper:
+    """Decorator to normalize whitespaces for a Scraper callable."""
 
-    @functools.wraps(extractor)
+    @functools.wraps(scraper)
     def wrapper(*, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
         return [
             normalize_whitespaces(paragraph)
-            for paragraph in extractor(
+            for paragraph in scraper(
                 url=url, html=html, publisher_identifier=publisher_identifier, crawl_date=crawl_date
             )
         ]
@@ -30,14 +30,14 @@ def _normalize_whitespaces(extractor: Extractor) -> Extractor:
 
 
 @_normalize_whitespaces
-def extract_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
+def scrape_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
     import newsplease
 
     return newsplease.NewsPlease.from_html(html, url=url).maintext.split("\n")  # type: ignore[no-any-return]
 
 
 @_normalize_whitespaces
-def extract_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
+def scrape_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
     from fundus import PublisherCollection
     from fundus.publishers.base_objects import PublisherEnum
 

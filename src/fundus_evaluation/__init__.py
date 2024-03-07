@@ -1,11 +1,12 @@
 import inspect
-from typing import Tuple
+from typing import Final, Tuple
 
 import fundus_evaluation
-from fundus_evaluation.extractors import Extractor
+from fundus_evaluation.scrapers import Scraper
 
-EXTRACTORS: Tuple[Extractor, ...] = tuple(
+SCRAPER_PREFIX: Final[str] = "scrape_"
+SCRAPERS: Tuple[Scraper, ...] = tuple(
     function
-    for name, function in inspect.getmembers(fundus_evaluation.extractors, inspect.isfunction)
-    if name.startswith("extract_")
+    for name, function in inspect.getmembers(fundus_evaluation.scrapers, inspect.isfunction)
+    if name.startswith(SCRAPER_PREFIX)
 )

@@ -30,6 +30,13 @@ def _normalize_whitespaces(extractor: Extractor) -> Extractor:
 
 
 @_normalize_whitespaces
+def extract_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
+    import newsplease
+
+    return newsplease.NewsPlease.from_html(html, url=url).maintext.split("\n")  # type: ignore[no-any-return]
+
+
+@_normalize_whitespaces
 def extract_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
     from fundus import PublisherCollection
     from fundus.publishers.base_objects import PublisherEnum

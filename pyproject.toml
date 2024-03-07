@@ -27,9 +27,13 @@ classifiers = [
 keywords = ["web scraping, web crawling", "evaluation"]
 dependencies = [
     "jiwer==3.0.3",
+    "more-itertools==9.1.0",
     "rouge-score==0.1.2",
+    "tqdm==4.66.2",
+    "typing-extensions==4.10.0",
     # News crawler dependencies
     "fundus@git+https://github.com/flairNLP/fundus.git@9a4bbbb44b9a2d4abfc6e690bba3d8ba19a3df9f",
+    "news-please==1.5.44",
 ]
 
 [project.urls]
@@ -41,6 +45,8 @@ dev = [
     "mypy==1.8.0",
     "isort==5.13.2",
     "black==24.2.0",
+    # Type stubs
+    "types-tqdm==4.66.0.20240106",
 ]
 
 [project.scripts]
@@ -50,7 +56,6 @@ evaluate = "fundus_evaluation:__main__.main"
 check_untyped_defs = true
 disallow_any_generics = true
 disallow_untyped_defs = true
-ignore_missing_imports = true
 no_implicit_optional = true
 no_implicit_reexport = true
 show_error_codes = true
@@ -60,6 +65,14 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = "fundus.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "newsplease.*"
+ignore_missing_imports = true
 
 [tool.black]
 line-length = 120

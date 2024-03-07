@@ -1,5 +1,8 @@
+import functools
 from datetime import datetime
 from typing import Any, Dict, List, Protocol
+
+from fundus_evaluation.utils import normalize_whitespaces
 
 
 class Extractor(Protocol):
@@ -10,7 +13,24 @@ class Extractor(Protocol):
         ...
 
 
-def extract_fundus(html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
+
+def _normalize_whitespaces(extractor: Extractor) -> Extractor:
+    """Decorator to normalize whitespaces for an extractor callable."""
+
+    @functools.wraps(extractor)
+    def wrapper(*, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
+        return [
+            normalize_whitespaces(paragraph)
+            for paragraph in extractor(
+                url=url, html=html, publisher_identifier=publisher_identifier, crawl_date=crawl_date
+            )
+        ]
+
+    return wrapper
+
+
+@_normalize_whitespaces
+def extract_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
     from fundus import PublisherCollection
     from fundus.publishers.base_objects import PublisherEnum
 

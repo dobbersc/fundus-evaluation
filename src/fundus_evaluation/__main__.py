@@ -67,8 +67,6 @@ def add_score(subparsers: Any) -> None:
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
-    import fundus_evaluation
-
     parser = argparse.ArgumentParser(formatter_class=RawTextArgumentDefaultsHelpFormatter)
     parser.add_argument("--version", action="version", version=f"%(prog)s {fundus_evaluation.__version__}")
 

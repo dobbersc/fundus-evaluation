@@ -90,11 +90,11 @@ def score_paragraph_match(
         confusion_matrix_candidates: Iterable[ConfusionMatrix] = (
             ConfusionMatrix.from_evaluation(reference_body, hypothesis_body) for reference_body in reference_bodies
         )
-        confusion_matrix: ConfusionMatrix = max(confusion_matrix_candidates, key=lambda matrix: matrix.f1_score())
+        best_confusion_matrix: ConfusionMatrix = max(confusion_matrix_candidates, key=lambda matrix: matrix.f1_score())
 
-        paragraph_scores["precision"].append(confusion_matrix.precision())
-        paragraph_scores["recall"].append(confusion_matrix.recall())
-        paragraph_scores["f1_score"].append(confusion_matrix.f1_score())
+        paragraph_scores["precision"].append(best_confusion_matrix.precision())
+        paragraph_scores["recall"].append(best_confusion_matrix.recall())
+        paragraph_scores["f1_score"].append(best_confusion_matrix.f1_score())
 
     return pd.DataFrame(paragraph_scores, index=pd.Index(reference_articles.keys(), name="article"))
 
@@ -117,3 +117,35 @@ def score_wer(
         word_error_rates.append(min(candidate_word_error_rates))
 
     return pd.DataFrame({"wer": word_error_rates}, index=pd.Index(reference_articles.keys(), name="article"))
+
+
+def score_rouge_lsum(
+    reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle]
+) -> pd.DataFrame:
+    import nltk
+    from rouge_score import rouge_scorer
+    from rouge_score.scoring import Score
+
+    # Download tokenizer required for ROUGE-LSum
+    try:
+        nltk.data.find("tokenizers/punkt")
+    except LookupError:
+        nltk.download("punkt")
+
+    rouge: rouge_scorer.RougeScorer = rouge_scorer.RougeScorer(["rougeLsum"], use_stemmer=False, split_summaries=True)
+
+    rouge_scores: Dict[str, List[float]] = {"precision": [], "recall": [], "f1_score": []}
+    for reference_article, hypothesis_article in zip(reference_articles.values(), hypothesis_articles.values()):
+        reference_bodies: List[str] = ["\n\n".join(body) for body in get_reference_bodies(reference_article["body"])]
+        hypothesis_body: str = "\n\n".join(hypothesis_article["body"])
+
+        candidate_scores: Iterator[Score] = (
+            rouge.score(reference_body, hypothesis_body)["rougeLsum"] for reference_body in reference_bodies
+        )
+        best_score: Score = max(candidate_scores, key=lambda score: score.fmeasure)
+
+        rouge_scores["precision"].append(best_score.precision)
+        rouge_scores["recall"].append(best_score.recall)
+        rouge_scores["f1_score"].append(best_score.fmeasure)
+
+    return pd.DataFrame(rouge_scores, index=pd.Index(reference_articles.keys(), name="article"))

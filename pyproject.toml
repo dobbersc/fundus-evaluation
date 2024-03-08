@@ -83,6 +83,14 @@ module = "newsplease.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
+module = "nltk.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rouge_score.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
 module = "trafilatura.*"
 ignore_missing_imports = true
 

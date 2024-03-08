@@ -17,7 +17,18 @@ def call_scrape(args: argparse.Namespace) -> None:
         ground_truth_path=args.ground_truth_path,
         html_directory=args.html_directory,
         output_directory=args.output_directory,
-        scrapers=set(args.scrapers),
+        scrapers=None if args.scrapers is None else set(args.scrapers),
+    )
+
+
+def call_score(args: argparse.Namespace) -> None:
+    from fundus_evaluation.entry_points.scoring import score
+
+    score(
+        ground_truth_path=args.ground_truth_path,
+        extractions_directory=args.extractions_directory,
+        output_path=args.output_path,
+        scorers=None if args.scorers is None else set(args.scorers),
     )
 
 
@@ -38,14 +49,32 @@ def add_scrape(subparsers: Any) -> None:
     )
 
 
+def add_score(subparsers: Any) -> None:
+    score = subparsers.add_parser(
+        "score",
+        help="TODO",
+        description="TODO",
+        formatter_class=RawTextArgumentDefaultsHelpFormatter,
+    )
+    score.set_defaults(func=call_score)
+
+    score.add_argument("-t", "--ground-truth-path", type=Path, required=True, help="TODO")
+    score.add_argument("-e", "--extractions-directory", type=Path, required=True, help="TODO")
+    score.add_argument("-o", "--output-path", type=Path, required=True, help="TODO")
+    score.add_argument(
+        "-s", "--scorers", nargs="+", choices=fundus_evaluation.SCORERS.keys(), default=None, help="TODO"
+    )
+
+
 def parse_args(argv: List[str]) -> argparse.Namespace:
     import fundus_evaluation
 
-    parser = argparse.ArgumentParser(prog="evaluate", formatter_class=RawTextArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(formatter_class=RawTextArgumentDefaultsHelpFormatter)
     parser.add_argument("--version", action="version", version=f"%(prog)s {fundus_evaluation.__version__}")
 
-    subparsers = parser.add_subparsers(required=True)
+    subparsers = parser.add_subparsers(dest="command", required=True)
     add_scrape(subparsers)
+    add_score(subparsers)
 
     return parser.parse_args(argv)
 

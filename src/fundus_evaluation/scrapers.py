@@ -34,7 +34,7 @@ def _normalize_whitespaces(scraper: Scraper) -> Scraper:
 def scrape_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
     import newsplease
 
-    body: str = newsplease.NewsPlease.from_html(html, url=url)
+    body: str = newsplease.NewsPlease.from_html(html, url=url).maintext
     return body.split("\n")
 
 

@@ -49,6 +49,7 @@ dev = [
     "isort==5.13.2",
     "black==24.2.0",
     # Type stubs
+    "pandas-stubs==2.0.3.230814",
     "types-tqdm==4.66.0.20240106",
 ]
 
@@ -79,6 +80,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "newsplease.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "trafilatura.*"
 ignore_missing_imports = true
 
 [tool.black]

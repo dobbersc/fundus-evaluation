@@ -34,14 +34,16 @@ def _normalize_whitespaces(scraper: Scraper) -> Scraper:
 def scrape_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
     import newsplease
 
-    return newsplease.NewsPlease.from_html(html, url=url).maintext.split("\n")  # type: ignore[no-any-return]
+    body: str = newsplease.NewsPlease.from_html(html, url=url)
+    return body.split("\n")
 
 
 @_normalize_whitespaces
 def scrape_trafilatura(*, html: str, **_: Any) -> List[str]:
     import trafilatura
 
-    return trafilatura.extract(html, include_tables=False, include_comments=False).split("\n")
+    body: str = trafilatura.extract(html, include_tables=False, include_comments=False)
+    return body.split("\n")
 
 
 @_normalize_whitespaces

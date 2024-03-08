@@ -38,6 +38,13 @@ def scrape_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
 
 
 @_normalize_whitespaces
+def scrape_trafilatura(*, html: str, **_: Any) -> List[str]:
+    import trafilatura
+
+    return trafilatura.extract(html, include_tables=False, include_comments=False).split("\n")
+
+
+@_normalize_whitespaces
 def scrape_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
     from fundus import PublisherCollection
     from fundus.publishers.base_objects import PublisherEnum

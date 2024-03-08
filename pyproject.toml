@@ -26,14 +26,17 @@ classifiers = [
 ]
 keywords = ["web scraping, web crawling", "evaluation"]
 dependencies = [
-    "jiwer==3.0.3",
     "more-itertools==9.1.0",
-    "rouge-score==0.1.2",
+    "pandas==2.0.3",
     "tqdm==4.66.2",
     "typing-extensions==4.10.0",
     # News crawler dependencies
     "fundus@git+https://github.com/flairNLP/fundus.git@9a4bbbb44b9a2d4abfc6e690bba3d8ba19a3df9f",
     "news-please==1.5.44",
+    "trafilatura==1.7.0",
+    # Scorer dependencies
+    "jiwer==3.0.3",
+    "rouge-score==0.1.2",
 ]
 
 [project.urls]

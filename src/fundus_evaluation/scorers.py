@@ -1,7 +1,6 @@
 import collections
 import dataclasses
 from typing import (
-    Any,
     Counter,
     Dict,
     Iterable,
@@ -12,6 +11,8 @@ from typing import (
     runtime_checkable,
 )
 
+import pandas as pd
+
 from fundus_evaluation.utils import EvaluationArticle, get_reference_bodies
 
 T = TypeVar("T")
@@ -19,26 +20,23 @@ T = TypeVar("T")
 
 @runtime_checkable
 class Scorer(Protocol):
-    """Protocol for scoring functions. The function name should have the prefix 'score_'."""
+    """Protocol for scoring functions. The function name should have the prefix 'score_'.
+    The function return value should be a pandas data frame with the index column "article"
+    of article identifiers and the remaining columns for the respective article scores.
+    """
 
     __name__: str
 
     def __call__(
-        self,
-        reference_articles: Dict[str, EvaluationArticle],
-        hypothesis_articles: Dict[str, EvaluationArticle],
-        **kwargs: Any,
-    ) -> Dict[str, float]:
+        self, reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle]
+    ) -> pd.DataFrame:
         ...
 
 
 @dataclasses.dataclass
 class ConfusionMatrix:
     true_positives: int = 0
-    # The true negatives are not relevant in this task.
-    # TODO: But we could explicitly mark paragraphs / sections that we do not want to extract.
-    #   This would have no impact on the Precision, Recall and F1-Scorer score but on the Accuracy.
-    true_negatives: int = 0
+    true_negatives: int = 0  # The true negatives are not relevant in this task
     false_positives: int = 0
     false_negatives: int = 0
 
@@ -78,35 +76,13 @@ class ConfusionMatrix:
         except ZeroDivisionError:
             return float("NaN")
 
-    def __add__(self, other: "ConfusionMatrix") -> "ConfusionMatrix":
-        return ConfusionMatrix(
-            true_positives=self.true_positives + other.true_positives,
-            false_positives=self.false_positives + other.false_positives,
-            false_negatives=self.false_negatives + other.false_negatives,
-        )
-
-
-@dataclasses.dataclass
-class LevenshteinValues:
-    hits: int = 0
-    substitutions: int = 0
-    deletions: int = 0
-    insertions: int = 0
-
-    def word_error_rate(self) -> float:
-        s, d, i, h = (
-            self.substitutions,
-            self.deletions,
-            self.insertions,
-            self.hits,
-        )
-        return (s + d + i) / (h + s + d)
-
 
 def score_paragraph_match(
-    reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle], **_: Any
-) -> Dict[str, float]:
-    confusion_matrix: ConfusionMatrix = ConfusionMatrix()
+    reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle]
+) -> pd.DataFrame:
+    assert reference_articles.keys() == hypothesis_articles.keys()
+
+    paragraph_scores: Dict[str, List[float]] = {"precision": [], "recall": [], "f1_score": []}
     for reference_article, hypothesis_article in zip(reference_articles.values(), hypothesis_articles.values()):
         reference_bodies: Iterator[List[str]] = get_reference_bodies(reference_article["body"])
         hypothesis_body: List[str] = hypothesis_article["body"]
@@ -114,33 +90,30 @@ def score_paragraph_match(
         confusion_matrix_candidates: Iterable[ConfusionMatrix] = (
             ConfusionMatrix.from_evaluation(reference_body, hypothesis_body) for reference_body in reference_bodies
         )
-        confusion_matrix += max(confusion_matrix_candidates, key=lambda matrix: matrix.f1_score())
+        confusion_matrix: ConfusionMatrix = max(confusion_matrix_candidates, key=lambda matrix: matrix.f1_score())
 
-    return {
-        "precision": confusion_matrix.precision(),
-        "recall": confusion_matrix.recall(),
-        "f1_score": confusion_matrix.f1_score(),
-    }
+        paragraph_scores["precision"].append(confusion_matrix.precision())
+        paragraph_scores["recall"].append(confusion_matrix.recall())
+        paragraph_scores["f1_score"].append(confusion_matrix.f1_score())
+
+    return pd.DataFrame(paragraph_scores, index=pd.Index(reference_articles.keys(), name="article"))
 
 
 def score_wer(
-    reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle], **_: Any
-) -> Dict[str, float]:
+    reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle]
+) -> pd.DataFrame:
     import jiwer
 
-    levenshtein_values: LevenshteinValues = LevenshteinValues()
+    assert reference_articles.keys() == hypothesis_articles.keys()
+
+    word_error_rates: List[float] = []
     for reference_article, hypothesis_article in zip(reference_articles.values(), hypothesis_articles.values()):
         reference_bodies: List[str] = ["\n\n".join(body) for body in get_reference_bodies(reference_article["body"])]
         hypothesis_body: str = "\n\n".join(hypothesis_article["body"])
 
-        candidate_word_outputs: Iterator[jiwer.WordOutput] = (
-            jiwer.process_words(reference_body, hypothesis_body) for reference_body in reference_bodies
+        candidate_word_error_rates: Iterator[float] = (
+            jiwer.wer(reference_body, hypothesis_body) for reference_body in reference_bodies
         )
-        word_output: jiwer.WordOutput = min(candidate_word_outputs, key=lambda output: output.wer)
+        word_error_rates.append(min(candidate_word_error_rates))
 
-        levenshtein_values.hits += word_output.hits
-        levenshtein_values.substitutions += word_output.substitutions
-        levenshtein_values.deletions += word_output.deletions
-        levenshtein_values.insertions += word_output.insertions
-
-    return {"wer": levenshtein_values.word_error_rate()}
+    return pd.DataFrame({"wer": word_error_rates}, index=pd.Index(reference_articles.keys(), name="article"))

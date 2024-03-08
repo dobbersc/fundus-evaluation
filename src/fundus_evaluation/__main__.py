@@ -27,7 +27,7 @@ def call_score(args: argparse.Namespace) -> None:
     score(
         ground_truth_path=args.ground_truth_path,
         extractions_directory=args.extractions_directory,
-        output_path=args.output_path,
+        output_directory=args.output_directory,
         scorers=None if args.scorers is None else set(args.scorers),
     )
 
@@ -60,7 +60,7 @@ def add_score(subparsers: Any) -> None:
 
     score.add_argument("-t", "--ground-truth-path", type=Path, required=True, help="TODO")
     score.add_argument("-e", "--extractions-directory", type=Path, required=True, help="TODO")
-    score.add_argument("-o", "--output-path", type=Path, required=True, help="TODO")
+    score.add_argument("-o", "--output-directory", type=Path, required=True, help="TODO")
     score.add_argument(
         "-s", "--scorers", nargs="+", choices=fundus_evaluation.SCORERS.keys(), default=None, help="TODO"
     )

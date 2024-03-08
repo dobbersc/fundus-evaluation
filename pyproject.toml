@@ -31,7 +31,7 @@ dependencies = [
     "tqdm==4.66.2",
     "typing-extensions==4.10.0",
     # News crawler dependencies
-    "fundus@git+https://github.com/flairNLP/fundus.git@9a4bbbb44b9a2d4abfc6e690bba3d8ba19a3df9f",
+    "fundus@git+https://github.com/flairNLP/fundus.git@b276878207bd6bf89d92015340434e6e3d9bb71a",
     "news-please==1.5.44",
     "trafilatura==1.7.0",
     # Scorer dependencies

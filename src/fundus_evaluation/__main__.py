@@ -1,13 +1,17 @@
 import argparse
 import sys
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Optional
 
 import fundus_evaluation
 
 
 class RawTextArgumentDefaultsHelpFormatter(argparse.RawTextHelpFormatter, argparse.ArgumentDefaultsHelpFormatter):
     pass
+
+
+def none_or_int(value: str) -> Optional[int]:
+    return None if value == "None" else int(value)
 
 
 def call_scrape(args: argparse.Namespace) -> None:
@@ -29,6 +33,7 @@ def call_score(args: argparse.Namespace) -> None:
         extractions_directory=args.extractions_directory,
         output_directory=args.output_directory,
         scorers=None if args.scorers is None else set(args.scorers),
+        max_optional_paragraphs=args.max_optional_paragraphs,
     )
 
 
@@ -64,6 +69,7 @@ def add_score(subparsers: Any) -> None:
     score.add_argument(
         "-s", "--scorers", nargs="+", choices=fundus_evaluation.SCORERS.keys(), default=None, help="TODO"
     )
+    score.add_argument("-p", "--max-optional-paragraphs", type=none_or_int, default=4, help="TODO")
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:

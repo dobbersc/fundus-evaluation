@@ -6,6 +6,7 @@ from typing import (
     Iterable,
     Iterator,
     List,
+    Optional,
     Protocol,
     TypeVar,
     runtime_checkable,
@@ -28,7 +29,10 @@ class Scorer(Protocol):
     __name__: str
 
     def __call__(
-        self, reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle]
+        self,
+        reference_articles: Dict[str, EvaluationArticle],
+        hypothesis_articles: Dict[str, EvaluationArticle],
+        max_optional_paragraphs: Optional[int] = None,
     ) -> pd.DataFrame:
         ...
 
@@ -78,13 +82,15 @@ class ConfusionMatrix:
 
 
 def score_paragraph_match(
-    reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle]
+    reference_articles: Dict[str, EvaluationArticle],
+    hypothesis_articles: Dict[str, EvaluationArticle],
+    max_optional_paragraphs: Optional[int] = None,
 ) -> pd.DataFrame:
     assert reference_articles.keys() == hypothesis_articles.keys()
 
     paragraph_scores: Dict[str, List[float]] = {"precision": [], "recall": [], "f1_score": []}
     for reference_article, hypothesis_article in zip(reference_articles.values(), hypothesis_articles.values()):
-        reference_bodies: Iterator[List[str]] = get_reference_bodies(reference_article["body"])
+        reference_bodies: Iterator[List[str]] = get_reference_bodies(reference_article["body"], max_optional_paragraphs)
         hypothesis_body: List[str] = hypothesis_article["body"]
 
         confusion_matrix_candidates: Iterable[ConfusionMatrix] = (
@@ -100,7 +106,9 @@ def score_paragraph_match(
 
 
 def score_wer(
-    reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle]
+    reference_articles: Dict[str, EvaluationArticle],
+    hypothesis_articles: Dict[str, EvaluationArticle],
+    max_optional_paragraphs: Optional[int] = None,
 ) -> pd.DataFrame:
     import jiwer
 
@@ -108,7 +116,9 @@ def score_wer(
 
     word_error_rates: List[float] = []
     for reference_article, hypothesis_article in zip(reference_articles.values(), hypothesis_articles.values()):
-        reference_bodies: List[str] = ["\n\n".join(body) for body in get_reference_bodies(reference_article["body"])]
+        reference_bodies: List[str] = [
+            "\n\n".join(body) for body in get_reference_bodies(reference_article["body"], max_optional_paragraphs)
+        ]
         hypothesis_body: str = "\n\n".join(hypothesis_article["body"])
 
         candidate_word_error_rates: Iterator[float] = (
@@ -120,11 +130,15 @@ def score_wer(
 
 
 def score_rouge_lsum(
-    reference_articles: Dict[str, EvaluationArticle], hypothesis_articles: Dict[str, EvaluationArticle]
+    reference_articles: Dict[str, EvaluationArticle],
+    hypothesis_articles: Dict[str, EvaluationArticle],
+    max_optional_paragraphs: Optional[int] = None,
 ) -> pd.DataFrame:
     import nltk
     from rouge_score import rouge_scorer
     from rouge_score.scoring import Score
+
+    assert reference_articles.keys() == hypothesis_articles.keys()
 
     # Download tokenizer required for ROUGE-LSum
     try:
@@ -136,7 +150,9 @@ def score_rouge_lsum(
 
     rouge_scores: Dict[str, List[float]] = {"precision": [], "recall": [], "f1_score": []}
     for reference_article, hypothesis_article in zip(reference_articles.values(), hypothesis_articles.values()):
-        reference_bodies: List[str] = ["\n\n".join(body) for body in get_reference_bodies(reference_article["body"])]
+        reference_bodies: List[str] = [
+            "\n\n".join(body) for body in get_reference_bodies(reference_article["body"], max_optional_paragraphs)
+        ]
         hypothesis_body: str = "\n\n".join(hypothesis_article["body"])
 
         candidate_scores: Iterator[Score] = (

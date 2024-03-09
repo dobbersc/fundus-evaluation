@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List, Set, Union
+from typing import Dict, List, Optional, Set, Union
 
 import pandas as pd
 from tqdm import tqdm
@@ -14,6 +14,7 @@ def score(
     extractions_directory: Union[str, Path],
     output_directory: Union[str, Path],
     scorers: Union[Dict[str, Scorer], Set[str], None] = None,
+    max_optional_paragraphs: Optional[int] = 4,
 ) -> None:
     if scorers is None:
         scorers = SCORERS
@@ -38,7 +39,7 @@ def score(
                 progress_bar.set_description(f"Evaluating {scraper_identifier!r} with {scorer_identifier!r}")
 
                 results.append(
-                    scorer(reference_articles, hypothesis_articles)
+                    scorer(reference_articles, hypothesis_articles, max_optional_paragraphs)
                     .assign(scraper=scraper_identifier)
                     .set_index("scraper", append=True)
                 )

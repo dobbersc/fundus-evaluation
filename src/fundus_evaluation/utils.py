@@ -1,6 +1,15 @@
 import json
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, List, Tuple, TypedDict, Union
+from typing import (
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Set,
+    Tuple,
+    TypedDict,
+    Union,
+)
 
 import more_itertools
 
@@ -35,20 +44,26 @@ def remove_optional_paragraph_marker(paragraph: str) -> str:
     return paragraph[1:-1]
 
 
-def get_reference_bodies(body: List[str]) -> Iterator[List[str]]:
+def remove_optional_paragraphs(body: List[str], remove_indices: Set[int]) -> List[str]:
+    return [
+        remove_optional_paragraph_marker(paragraph) if is_optional_paragraph(paragraph) else paragraph
+        for index, paragraph in enumerate(body)
+        if index not in remove_indices
+    ]
+
+
+def get_reference_bodies(body: List[str], max_optional_paragraphs: Optional[int] = None) -> Iterator[List[str]]:
     optional_paragraph_indices: Tuple[int, ...] = tuple(
         index for index, paragraph in enumerate(body) if is_optional_paragraph(paragraph)
     )
-    for split_indices in more_itertools.powerset(optional_paragraph_indices):
-        yield [
-            remove_optional_paragraph_marker(paragraph) if index in optional_paragraph_indices else paragraph
-            for index, paragraph in enumerate(body)
-            if index not in split_indices
-        ]
 
+    if len(optional_paragraph_indices) > max_optional_paragraphs:
+        yield remove_optional_paragraphs(body, remove_indices=set())
+        yield remove_optional_paragraphs(body, remove_indices=set(optional_paragraph_indices))
+        return
 
-def compute_ngrams(sequence: Iterable[str], n: int) -> Iterator[Tuple[str, ...]]:
-    yield from more_itertools.windowed(sequence, n=n, fillvalue="")
+    for remove_indices in more_itertools.powerset(optional_paragraph_indices):
+        yield remove_optional_paragraphs(body, remove_indices=set(remove_indices))
 
 
 def normalize_whitespaces(text: str) -> str:

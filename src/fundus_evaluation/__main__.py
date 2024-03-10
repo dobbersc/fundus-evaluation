@@ -15,7 +15,7 @@ def none_or_int(value: str) -> Optional[int]:
 
 
 def call_scrape(args: argparse.Namespace) -> None:
-    from fundus_evaluation.entry_points.scraping import scrape
+    from fundus_evaluation.entry_points.scrape import scrape
 
     scrape(
         ground_truth_path=args.ground_truth_path,
@@ -26,7 +26,7 @@ def call_scrape(args: argparse.Namespace) -> None:
 
 
 def call_score(args: argparse.Namespace) -> None:
-    from fundus_evaluation.entry_points.scoring import score
+    from fundus_evaluation.entry_points.score import score
 
     score(
         ground_truth_path=args.ground_truth_path,

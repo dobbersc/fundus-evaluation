@@ -57,7 +57,7 @@ def get_reference_bodies(body: List[str], max_optional_paragraphs: Optional[int]
         index for index, paragraph in enumerate(body) if is_optional_paragraph(paragraph)
     )
 
-    if len(optional_paragraph_indices) > max_optional_paragraphs:
+    if max_optional_paragraphs is not None and len(optional_paragraph_indices) > max_optional_paragraphs:
         yield remove_optional_paragraphs(body, remove_indices=set())
         yield remove_optional_paragraphs(body, remove_indices=set(optional_paragraph_indices))
         return

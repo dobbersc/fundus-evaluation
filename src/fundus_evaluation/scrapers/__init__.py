@@ -1,5 +1,6 @@
 from ._scrapers import (
     Scraper,
+    scrape_boilerpipe,
     scrape_bte,
     scrape_fundus,
     scrape_justext,
@@ -9,6 +10,7 @@ from ._scrapers import (
 
 __all__ = [
     "Scraper",
+    "scrape_boilerpipe",
     "scrape_bte",
     "scrape_fundus",
     "scrape_justext",

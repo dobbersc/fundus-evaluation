@@ -31,6 +31,15 @@ def _normalize_whitespaces(scraper: Scraper) -> Scraper:
 
 
 @_normalize_whitespaces
+def scrape_boilerpipe(*, html: str, **_: Any) -> List[str]:
+    import boilerpipe.extract as boilerpipe
+
+    extractor = boilerpipe.Extractor(extractor='ArticleExtractor', html=html)
+    body: str = str(extractor.getText())
+    return body.split("\n")
+
+
+@_normalize_whitespaces
 def scrape_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
     from fundus import PublisherCollection
     from fundus.publishers.base_objects import PublisherEnum

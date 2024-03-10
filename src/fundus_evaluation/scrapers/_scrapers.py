@@ -31,6 +31,16 @@ def _normalize_whitespaces(scraper: Scraper) -> Scraper:
 
 
 @_normalize_whitespaces
+def scrape_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
+    from fundus import PublisherCollection
+    from fundus.publishers.base_objects import PublisherEnum
+
+    publisher: PublisherEnum = PublisherCollection[publisher_identifier]
+    parsed_data: Dict[str, Any] = publisher.parser(crawl_date).parse(html, error_handling="raise")
+    return list(parsed_data["body"].as_text_sequence())
+
+
+@_normalize_whitespaces
 def scrape_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
     import newsplease
 
@@ -47,10 +57,8 @@ def scrape_trafilatura(*, html: str, **_: Any) -> List[str]:
 
 
 @_normalize_whitespaces
-def scrape_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
-    from fundus import PublisherCollection
-    from fundus.publishers.base_objects import PublisherEnum
+def scrape_bte(*, html: str, **_: Any) -> List[str]:
+    from fundus_evaluation.scrapers import bte
 
-    publisher: PublisherEnum = PublisherCollection[publisher_identifier]
-    parsed_data: Dict[str, Any] = publisher.parser(crawl_date).parse(html, error_handling="raise")
-    return list(parsed_data["body"].as_text_sequence())
+    body: str = bte.html2text(html)
+    return body.split("\n")

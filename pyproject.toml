@@ -75,6 +75,10 @@ module = "fundus.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
+module = "fundus_evaluation.scrapers.bte"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
 module = "jiwer.*"
 ignore_missing_imports = true
 

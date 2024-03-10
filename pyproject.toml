@@ -32,6 +32,7 @@ dependencies = [
     "typing-extensions==4.10.0",
     # News crawler dependencies
     "fundus@git+https://github.com/flairNLP/fundus.git@b276878207bd6bf89d92015340434e6e3d9bb71a",
+    "justext==3.0.0",
     "news-please==1.5.44",
     "trafilatura==1.7.0",
     # Scorer dependencies
@@ -80,6 +81,10 @@ ignore_errors = true
 
 [[tool.mypy.overrides]]
 module = "jiwer.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "justext.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

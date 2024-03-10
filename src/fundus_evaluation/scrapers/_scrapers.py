@@ -41,6 +41,29 @@ def scrape_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime,
 
 
 @_normalize_whitespaces
+def scrape_justext(*, html: str, **_: Any) -> List[str]:
+    import justext
+
+    # We use the same parameters as in the web-content-extraction-benchmark repository,
+    # except that we include headings in our benchmark:
+    # https://github.com/chatnoir-eu/web-content-extraction-benchmark/blob/221b6503d66bf4faa378e6ae3c3f63ee01d584c6/src/extraction_benchmark/extractors/extractors.py#L94
+    justext_paragraphs = justext.justext(
+        html,
+        justext.get_stoplist("English"),
+        length_low=50,
+        length_high=200,
+        stopwords_low=0.1,
+        stopwords_high=0.2,
+        max_link_density=0.2,
+        max_heading_distance=200,
+        no_headings=False,
+        encoding="utf-8",
+    )
+
+    return [paragraph.text for paragraph in justext_paragraphs if not paragraph.is_boilerplate]
+
+
+@_normalize_whitespaces
 def scrape_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
     import newsplease
 

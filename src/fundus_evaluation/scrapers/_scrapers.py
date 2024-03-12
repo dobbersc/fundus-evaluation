@@ -1,6 +1,6 @@
 import functools
 from datetime import datetime
-from typing import Any, Dict, List, Protocol, runtime_checkable
+from typing import Any, Dict, Iterator, List, Protocol, runtime_checkable
 
 from fundus_evaluation.utils import normalize_whitespaces
 
@@ -20,13 +20,13 @@ def normalize(scraper: Scraper) -> Scraper:
 
     @functools.wraps(scraper)
     def wrapper(*, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
-        return [
+        whitespace_normalized_paragraphs: Iterator[str] = (
             normalize_whitespaces(paragraph)
             for paragraph in scraper(
                 url=url, html=html, publisher_identifier=publisher_identifier, crawl_date=crawl_date
             )
-            if paragraph
-        ]
+        )
+        return [paragraph for paragraph in whitespace_normalized_paragraphs if paragraph]
 
     return wrapper
 

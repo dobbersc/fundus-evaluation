@@ -44,30 +44,31 @@ def is_optional_paragraph(paragraph: str) -> bool:
 
 
 def remove_optional_paragraph_marker(paragraph: str) -> str:
-    assert is_optional_paragraph(paragraph)
-    return paragraph[1:-1]
+    return paragraph[1:-1] if is_optional_paragraph(paragraph) else paragraph
 
 
-def remove_optional_paragraphs(body: List[str], remove_indices: Set[int]) -> List[str]:
+def prepare_body(body: List[str], remove_paragraphs: AbstractSet[int] = frozenset()) -> List[str]:
     return [
-        remove_optional_paragraph_marker(paragraph) if is_optional_paragraph(paragraph) else paragraph
+        remove_optional_paragraph_marker(paragraph)
         for index, paragraph in enumerate(body)
-        if index not in remove_indices
+        if index not in remove_paragraphs
     ]
 
 
+def get_optional_paragraph_indices(body: List[str]) -> Tuple[int, ...]:
+    return tuple(index for index, paragraph in enumerate(body) if is_optional_paragraph(paragraph))
+
+
 def get_reference_bodies(body: List[str], max_optional_paragraphs: Optional[int] = None) -> Iterator[List[str]]:
-    optional_paragraph_indices: Tuple[int, ...] = tuple(
-        index for index, paragraph in enumerate(body) if is_optional_paragraph(paragraph)
-    )
+    optional_paragraph_indices: Tuple[int, ...] = get_optional_paragraph_indices(body)
 
     if max_optional_paragraphs is not None and len(optional_paragraph_indices) > max_optional_paragraphs:
-        yield remove_optional_paragraphs(body, remove_indices=set())
-        yield remove_optional_paragraphs(body, remove_indices=set(optional_paragraph_indices))
+        yield prepare_body(body)
+        yield prepare_body(body, remove_paragraphs=set(optional_paragraph_indices))
         return
 
     for remove_indices in more_itertools.powerset(optional_paragraph_indices):
-        yield remove_optional_paragraphs(body, remove_indices=set(remove_indices))
+        yield prepare_body(body, remove_paragraphs=set(remove_indices))
 
 
 def normalize_whitespaces(text: str) -> str:

@@ -15,8 +15,8 @@ class Scraper(Protocol):
         ...
 
 
-def _normalize_whitespaces(scraper: Scraper) -> Scraper:
-    """Decorator to normalize whitespaces for a Scraper callable."""
+def normalize(scraper: Scraper) -> Scraper:
+    """Decorator to normalize whitespaces and remove empty paragraphs for a Scraper callable."""
 
     @functools.wraps(scraper)
     def wrapper(*, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
@@ -25,12 +25,13 @@ def _normalize_whitespaces(scraper: Scraper) -> Scraper:
             for paragraph in scraper(
                 url=url, html=html, publisher_identifier=publisher_identifier, crawl_date=crawl_date
             )
+            if paragraph
         ]
 
     return wrapper
 
 
-@_normalize_whitespaces
+@normalize
 def scrape_boilerpipe(*, html: str, **_: Any) -> List[str]:
     import boilerpipe.extract as boilerpipe
 
@@ -39,7 +40,7 @@ def scrape_boilerpipe(*, html: str, **_: Any) -> List[str]:
     return body.split("\n")
 
 
-@_normalize_whitespaces
+@normalize
 def scrape_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime, **_: Any) -> List[str]:
     from fundus import PublisherCollection
     from fundus.publishers.base_objects import PublisherEnum
@@ -49,7 +50,7 @@ def scrape_fundus(*, html: str, publisher_identifier: str, crawl_date: datetime,
     return list(parsed_data["body"].as_text_sequence())
 
 
-@_normalize_whitespaces
+@normalize
 def scrape_justext(*, html: str, **_: Any) -> List[str]:
     import justext
 
@@ -72,7 +73,7 @@ def scrape_justext(*, html: str, **_: Any) -> List[str]:
     return [paragraph.text for paragraph in justext_paragraphs if not paragraph.is_boilerplate]
 
 
-@_normalize_whitespaces
+@normalize
 def scrape_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
     import newsplease
 
@@ -80,7 +81,7 @@ def scrape_newsplease(*, url: str, html: str, **_: Any) -> List[str]:
     return body.split("\n")
 
 
-@_normalize_whitespaces
+@normalize
 def scrape_trafilatura(*, html: str, **_: Any) -> List[str]:
     import trafilatura
 
@@ -88,7 +89,7 @@ def scrape_trafilatura(*, html: str, **_: Any) -> List[str]:
     return body.split("\n")
 
 
-@_normalize_whitespaces
+@normalize
 def scrape_bte(*, html: str, **_: Any) -> List[str]:
     from fundus_evaluation.scrapers import bte
 

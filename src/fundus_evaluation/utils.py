@@ -1,17 +1,22 @@
+import gzip
 import json
+import re
 from pathlib import Path
 from typing import (
+    AbstractSet,
     Dict,
     Iterator,
     List,
     Optional,
-    Set,
+    Pattern,
     Tuple,
     TypedDict,
     Union,
 )
 
 import more_itertools
+
+_TOKENIZE_WORDS: Pattern[str] = re.compile(r"\w+", flags=re.UNICODE)
 
 
 class EvaluationArticle(TypedDict):
@@ -73,3 +78,15 @@ def get_reference_bodies(body: List[str], max_optional_paragraphs: Optional[int]
 
 def normalize_whitespaces(text: str) -> str:
     return " ".join(text.split())
+
+
+def tokenize_words(text: str) -> List[str]:
+    """Tokenizes text by extracting Unicode word tokens (skips any non-word tokens).
+
+    Args:
+        text: The input text.
+
+    Returns:
+        The list of word tokens.
+    """
+    return _TOKENIZE_WORDS.findall(text)

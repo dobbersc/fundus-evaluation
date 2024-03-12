@@ -102,7 +102,7 @@ def score_paragraph_match(
         paragraph_scores["recall"].append(best_confusion_matrix.recall())
         paragraph_scores["f1_score"].append(best_confusion_matrix.f1_score())
 
-    return pd.DataFrame(paragraph_scores, index=pd.Index(reference_articles.keys(), name="article"))
+    return pd.DataFrame(paragraph_scores, index=pd.Index(reference_articles, name="article"))
 
 
 def score_wer(
@@ -126,7 +126,7 @@ def score_wer(
         )
         word_error_rates.append(min(candidate_word_error_rates))
 
-    return pd.DataFrame({"wer": word_error_rates}, index=pd.Index(reference_articles.keys(), name="article"))
+    return pd.DataFrame({"wer": word_error_rates}, index=pd.Index(reference_articles, name="article"))
 
 
 def score_rouge_lsum(
@@ -164,4 +164,4 @@ def score_rouge_lsum(
         rouge_scores["recall"].append(best_score.recall)
         rouge_scores["f1_score"].append(best_score.fmeasure)
 
-    return pd.DataFrame(rouge_scores, index=pd.Index(reference_articles.keys(), name="article"))
+    return pd.DataFrame(rouge_scores, index=pd.Index(reference_articles, name="article"))

@@ -28,6 +28,7 @@ keywords = ["web scraping, web crawling", "evaluation"]
 dependencies = [
     "more-itertools==9.1.0",
     "pandas==2.0.3",
+    "resiliparse==0.14.5",
     "tqdm==4.66.2",
     "typing-extensions==4.10.0",
     # News crawler dependencies
@@ -102,6 +103,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "nltk.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "resiliparse.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

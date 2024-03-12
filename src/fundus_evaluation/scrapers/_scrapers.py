@@ -32,10 +32,18 @@ def normalize(scraper: Scraper) -> Scraper:
 
 
 @normalize
+def scrape_boilernet(*, html: str, **_: Any) -> List[str]:
+    from fundus_evaluation.scrapers import boilernet
+
+    body: str = boilernet.extract(html)
+    return body.split("\n")
+
+
+@normalize
 def scrape_boilerpipe(*, html: str, **_: Any) -> List[str]:
     import boilerpipe.extract as boilerpipe
 
-    extractor = boilerpipe.Extractor(extractor='ArticleExtractor', html=html)
+    extractor = boilerpipe.Extractor(extractor="ArticleExtractor", html=html)
     body: str = str(extractor.getText())
     return body.split("\n")
 

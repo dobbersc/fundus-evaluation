@@ -35,6 +35,10 @@ def load_evaluation_articles(path: Union[str, Path]) -> Dict[str, EvaluationArti
         return dict(sorted(json.load(f).items()))
 
 
+def load_zipped_html(path: Path) -> str:
+    return gzip.decompress(path.read_bytes()).decode("utf-8")
+
+
 def is_optional_paragraph(paragraph: str) -> bool:
     return paragraph[0] == "[" and paragraph[-1] == "]"
 

@@ -1,13 +1,17 @@
-import gzip
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Union, Dict, Set, Iterator, Tuple
+from typing import Dict, Iterator, Set, Tuple, Union
+
+from tqdm import tqdm
 
 from fundus_evaluation import SCRAPERS
 from fundus_evaluation.scrapers import Scraper
-from fundus_evaluation.utils import EvaluationArticle, load_evaluation_articles
-from tqdm import tqdm
+from fundus_evaluation.utils import (
+    EvaluationArticle,
+    load_evaluation_articles,
+    load_zipped_html,
+)
 
 
 def _scrape_articles(
@@ -15,7 +19,7 @@ def _scrape_articles(
 ) -> Iterator[Tuple[str, EvaluationArticle]]:
     for article_identifier, evaluation_article in evaluation_articles.items():
         url: str = evaluation_article["url"]
-        html: str = gzip.decompress((html_directory / article_identifier).read_bytes()).decode("utf-8")
+        html: str = load_zipped_html(html_directory / article_identifier)
         crawl_date: datetime = datetime.fromisoformat(evaluation_article["crawl_date"])
         publisher_identifier: str = article_identifier.split("_")[0]
 

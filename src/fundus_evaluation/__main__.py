@@ -14,6 +14,16 @@ def none_or_int(value: str) -> Optional[int]:
     return None if value == "None" else int(value)
 
 
+def call_complexity(args: argparse.Namespace) -> None:
+    from fundus_evaluation.entry_points.complexity import complexity
+
+    complexity(
+        ground_truth_path=args.ground_truth_path,
+        html_directory=args.html_directory,
+        output_path=args.output_path,
+    )
+
+
 def call_scrape(args: argparse.Namespace) -> None:
     from fundus_evaluation.entry_points.scrape import scrape
 
@@ -35,6 +45,20 @@ def call_score(args: argparse.Namespace) -> None:
         scorers=None if args.scorers is None else set(args.scorers),
         max_optional_paragraphs=args.max_optional_paragraphs,
     )
+
+
+def add_complexity(subparsers: Any) -> None:
+    scrape = subparsers.add_parser(
+        "complexity",
+        help="TODO",
+        description="TODO",
+        formatter_class=RawTextArgumentDefaultsHelpFormatter,
+    )
+    scrape.set_defaults(func=call_complexity)
+
+    scrape.add_argument("-t", "--ground-truth-path", type=Path, required=True, help="TODO")
+    scrape.add_argument("-d", "--html-directory", type=Path, required=True, help="TODO")
+    scrape.add_argument("-o", "--output-path", type=Path, required=True, help="TODO")
 
 
 def add_scrape(subparsers: Any) -> None:
@@ -77,6 +101,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     parser.add_argument("--version", action="version", version=f"%(prog)s {fundus_evaluation.__version__}")
 
     subparsers = parser.add_subparsers(dest="command", required=True)
+    add_complexity(subparsers)
     add_scrape(subparsers)
     add_score(subparsers)
 

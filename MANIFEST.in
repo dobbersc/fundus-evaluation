@@ -1,0 +1,5 @@
+include src/fundus_evaluation/py.typed
+
+include src/fundus_evaluation/scrapers/boilernet/model.h5
+include src/fundus_evaluation/scrapers/boilernet/tags.json
+include src/fundus_evaluation/scrapers/boilernet/words.json

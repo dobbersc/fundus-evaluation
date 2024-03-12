@@ -45,5 +45,5 @@ def score(
                 )
                 progress_bar.update()
 
-            combined_results: pd.DataFrame = pd.concat(results).reorder_levels(["scraper", "article"])
+            combined_results: pd.DataFrame = pd.concat(results).reorder_levels(["scraper", "article"]).sort_index()
             combined_results.to_csv(output_directory / f"{scorer_identifier}.tsv", sep="\t")

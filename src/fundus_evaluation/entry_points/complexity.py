@@ -38,4 +38,4 @@ def complexity(
         },
         index=pd.Index(evaluation_articles, name="article"),
     )
-    df.to_csv(output_path, sep="\t")
+    df.sort_index().to_csv(output_path, sep="\t")

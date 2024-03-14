@@ -47,6 +47,16 @@ def call_score(args: argparse.Namespace) -> None:
     )
 
 
+def call_analysis(args: argparse.Namespace) -> None:
+    from fundus_evaluation.entry_points.analysis import analysis
+
+    analysis(
+        output_directory=args.output_directory,
+        complexity_path=args.complexity_path,
+        rouge_lsum_path=args.rouge_lsum_path,
+    )
+
+
 def add_complexity(subparsers: Any) -> None:
     scrape = subparsers.add_parser(
         "complexity",
@@ -96,6 +106,20 @@ def add_score(subparsers: Any) -> None:
     score.add_argument("-p", "--max-optional-paragraphs", type=none_or_int, default=4, help="TODO")
 
 
+def add_analysis(subparsers: Any) -> None:
+    score = subparsers.add_parser(
+        "analysis",
+        help="TODO",
+        description="TODO",
+        formatter_class=RawTextArgumentDefaultsHelpFormatter,
+    )
+    score.set_defaults(func=call_analysis)
+
+    score.add_argument("-o", "--output-directory", type=Path, required=True, help="TODO")
+    score.add_argument("-c", "--complexity-path", type=Path, default=None, help="TODO")
+    score.add_argument("-r", "--rouge-lsum-path", type=Path, default=None, help="TODO")
+
+
 def parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(formatter_class=RawTextArgumentDefaultsHelpFormatter)
     parser.add_argument("--version", action="version", version=f"%(prog)s {fundus_evaluation.__version__}")
@@ -104,6 +128,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     add_complexity(subparsers)
     add_scrape(subparsers)
     add_score(subparsers)
+    add_analysis(subparsers)
 
     return parser.parse_args(argv)
 

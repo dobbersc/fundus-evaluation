@@ -29,6 +29,7 @@ dependencies = [
     "more-itertools==9.1.0",
     "pandas==2.0.3",
     "resiliparse==0.14.5",
+    "seaborn==0.13.2",
     "tqdm==4.66.2",
     "typing-extensions==4.10.0",
     # News crawler dependencies
@@ -98,6 +99,10 @@ module = "justext.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
+module = "matplotlib.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
 module = "newsplease.*"
 ignore_missing_imports = true
 
@@ -111,6 +116,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "rouge_score.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "seaborn.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

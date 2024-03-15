@@ -1,0 +1,10 @@
+	precision	precision	recall	recall	f1_score	f1_score
+	mean	std	mean	std	mean	std
+scraper						
+fundus	99.88	0.59	96.62	12.75	97.62	9.75
+trafilatura	90.53	18.86	93.13	23.8	89.76	23.67
+bte	81.16	19.43	98.22	8.61	87.18	15.49
+justext	86.6	18.86	90.23	20.61	86.97	19.74
+boilernet	84.86	20.88	90.66	21.02	85.83	20.26
+newsplease	92.32	12.4	86.35	27.59	85.83	23.29
+boilerpipe	82.96	20.68	82.07	30.01	79.91	25.87

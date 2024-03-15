@@ -6,6 +6,7 @@ import pandas as pd
 from fundus_evaluation.analysis import (
     compute_rouge_lsum_summary,
     draw_complexity_boxplot,
+    draw_rouge_lsum_f1_score_stripplot,
     draw_rouge_lsum_stripplot,
 )
 
@@ -22,4 +23,5 @@ def analysis(
     if rouge_lsum_path:
         rouge_lsum: pd.DataFrame = pd.read_csv(rouge_lsum_path, sep="\t")
         draw_rouge_lsum_stripplot(rouge_lsum, out=output_directory)
+        draw_rouge_lsum_f1_score_stripplot(rouge_lsum, out=output_directory)
         compute_rouge_lsum_summary(rouge_lsum, out=output_directory)

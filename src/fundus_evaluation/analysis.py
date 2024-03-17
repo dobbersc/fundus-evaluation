@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union
+from typing import Dict, Union
 
 import numpy as np
 import pandas as pd
@@ -61,17 +61,7 @@ def draw_rouge_lsum_stripplot(rouge_lsum: pd.DataFrame, out: Union[str, Path, No
             "recall": "Recall",
             "f1_score": "F1-Score",
         }
-    ).replace(
-        {
-            "boilernet": "BoilerNet",
-            "boilerpipe": "Boilerpipe",
-            "bte": "BTE",
-            "fundus": "Fundus",
-            "justext": "jusText",
-            "newsplease": "news-please",
-            "trafilatura": "Trafilatura",
-        }
-    )
+    ).replace(SCRAPER_DISPLAY_NAMES)
 
     facet_grid: sns.FacetGrid = sns.catplot(
         rouge_lsum.melt(["scraper", "article"], var_name="Variant", value_name="ROUGE-LSum"),
@@ -98,17 +88,7 @@ def draw_rouge_lsum_stripplot(rouge_lsum: pd.DataFrame, out: Union[str, Path, No
 def draw_rouge_lsum_f1_score_stripplot(rouge_lsum: pd.DataFrame, out: Union[str, Path, None] = None) -> None:
     np.random.seed(1)
 
-    rouge_lsum = rouge_lsum.replace(
-        {
-            "boilernet": "BoilerNet",
-            "boilerpipe": "Boilerpipe",
-            "bte": "BTE",
-            "fundus": "Fundus",
-            "justext": "jusText",
-            "newsplease": "news-please",
-            "trafilatura": "Trafilatura",
-        }
-    )
+    rouge_lsum = rouge_lsum.replace(SCRAPER_DISPLAY_NAMES)
 
     facet_grid: sns.FacetGrid = sns.catplot(
         rouge_lsum[["scraper", "article", "f1_score"]],

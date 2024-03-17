@@ -49,7 +49,7 @@ def draw_complexity_boxplot(complexity: pd.DataFrame, out: Union[str, Path, None
     if out is None:
         plt.show()
     else:
-        plt.savefig(Path(out) / "complexity.pdf", dpi=300)
+        plt.savefig(Path(out) / "complexity_boxplot.pdf", dpi=300)
 
 
 def draw_rouge_lsum_stripplot(rouge_lsum: pd.DataFrame, out: Union[str, Path, None] = None) -> None:
@@ -109,7 +109,7 @@ def draw_rouge_lsum_f1_score_stripplot(rouge_lsum: pd.DataFrame, out: Union[str,
     if out is None:
         plt.show()
     else:
-        plt.savefig(Path(out) / "rouge_lsum_stripplot_f1_score.pdf", dpi=300)
+        plt.savefig(Path(out) / "rouge_lsum_f1_score_stripplot.pdf", dpi=300)
 
 
 def compute_rouge_lsum_scraper_summary(rouge_lsum: pd.DataFrame, out: Union[str, Path, None] = None) -> pd.DataFrame:
@@ -143,5 +143,5 @@ def compute_rouge_lsum_scraper_to_publisher_summary(
     )
 
     if out:
-        summary.to_csv(Path(out) / "rouge_lsum_summary.tsv", sep="\t")
+        summary.to_csv(Path(out) / "rouge_lsum_scraper_to_publisher_summary.tsv", sep="\t")
     return summary

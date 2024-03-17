@@ -1,4 +1,3 @@
-import warnings
 from pathlib import Path
 from typing import Union
 
@@ -9,6 +8,16 @@ from matplotlib import pyplot as plt
 
 # Set plot theme
 sns.set_theme(style="whitegrid", palette="muted")
+
+SCRAPER_DISPLAY_NAMES: Dict[str, str] = {
+    "boilernet": "BoilerNet",
+    "boilerpipe": "Boilerpipe",
+    "bte": "BTE",
+    "fundus": "Fundus",
+    "justext": "jusText",
+    "newsplease": "news-please",
+    "trafilatura": "Trafilatura",
+}
 
 
 def draw_complexity_boxplot(complexity: pd.DataFrame, out: Union[str, Path, None] = None) -> None:
@@ -124,9 +133,6 @@ def draw_rouge_lsum_f1_score_stripplot(rouge_lsum: pd.DataFrame, out: Union[str,
 
 
 def compute_rouge_lsum_scraper_summary(rouge_lsum: pd.DataFrame, out: Union[str, Path, None] = None) -> pd.DataFrame:
-    if rouge_lsum.isna().any(axis=None):
-        warnings.warn("NaN Values Detected!")
-
     summary: pd.DataFrame = (
         rouge_lsum.set_index(["scraper", "article"])
         .groupby("scraper")
@@ -144,9 +150,6 @@ def compute_rouge_lsum_scraper_summary(rouge_lsum: pd.DataFrame, out: Union[str,
 def compute_rouge_lsum_scraper_to_publisher_summary(
     rouge_lsum: pd.DataFrame, out: Union[str, Path, None] = None
 ) -> pd.DataFrame:
-    if rouge_lsum.isna().any(axis=None):
-        warnings.warn("NaN Values Detected!")
-
     summary = (
         rouge_lsum.assign(publisher=rouge_lsum["article"].str.replace("_\d+\.html\.gz", "", regex=True))[
             ["scraper", "publisher", "precision", "recall", "f1_score"]

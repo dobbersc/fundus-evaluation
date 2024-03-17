@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 from typing import Union
 
@@ -19,10 +20,16 @@ def analysis(
 ) -> None:
     if complexity_path is not None:
         complexity: pd.DataFrame = pd.read_csv(complexity_path, sep="\t")
+        if complexity.isna().any(axis=None):
+            warnings.warn("NaN values detected in complexity results.")
+
         draw_complexity_boxplot(complexity, out=output_directory)
 
     if rouge_lsum_path:
         rouge_lsum: pd.DataFrame = pd.read_csv(rouge_lsum_path, sep="\t")
+        if rouge_lsum.isna().any(axis=None):
+            warnings.warn("NaN values detected in ROUGE-LSum results.")
+
         draw_rouge_lsum_stripplot(rouge_lsum, out=output_directory)
         draw_rouge_lsum_f1_score_stripplot(rouge_lsum, out=output_directory)
         compute_rouge_lsum_scraper_summary(rouge_lsum, out=output_directory)

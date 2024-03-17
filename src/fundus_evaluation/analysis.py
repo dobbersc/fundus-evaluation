@@ -139,7 +139,7 @@ def compute_rouge_lsum_scraper_to_publisher_summary(
         .agg(["mean", "std"])
         .mul(100)
         .round(2)
-        .sort_values(["scraper", "publisher"], ascending=False)
+        .sort_values(["scraper", "publisher"], ascending=True)
     )
 
     if out:

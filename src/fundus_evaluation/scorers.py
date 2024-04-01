@@ -33,8 +33,7 @@ class Scorer(Protocol):
         reference_articles: Dict[str, EvaluationArticle],
         hypothesis_articles: Dict[str, EvaluationArticle],
         max_optional_paragraphs: Optional[int] = None,
-    ) -> pd.DataFrame:
-        ...
+    ) -> pd.DataFrame: ...
 
 
 @dataclasses.dataclass

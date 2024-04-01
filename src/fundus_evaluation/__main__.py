@@ -32,6 +32,7 @@ def call_scrape(args: argparse.Namespace) -> None:
         html_directory=args.html_directory,
         output_directory=args.output_directory,
         scrapers=None if args.scrapers is None else set(args.scrapers),
+        exclude_scrapers=set(args.exclude_scrapers),
     )
 
 
@@ -85,6 +86,9 @@ def add_scrape(subparsers: Any) -> None:
     scrape.add_argument("-o", "--output-directory", type=Path, required=True, help="TODO")
     scrape.add_argument(
         "-s", "--scrapers", nargs="+", choices=fundus_evaluation.SCRAPERS.keys(), default=None, help="TODO"
+    )
+    scrape.add_argument(
+        "-e", "--exclude-scrapers", nargs="+", choices=fundus_evaluation.SCRAPERS.keys(), default=set(), help="TODO"
     )
 
 

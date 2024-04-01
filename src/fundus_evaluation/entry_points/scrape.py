@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Iterator, Set, Tuple, Union
+from typing import AbstractSet, Dict, Iterator, Set, Tuple, Union
 
 from tqdm import tqdm
 
@@ -37,14 +37,19 @@ def scrape(
     html_directory: Union[str, Path],
     output_directory: Union[str, Path],
     scrapers: Union[Dict[str, Scraper], Set[str], None] = None,
+    exclude_scrapers: AbstractSet[str] = frozenset(),
 ) -> None:
     if scrapers is None:
-        scrapers = SCRAPERS
+        scrapers = {
+            scraper_identifier: scraper
+            for scraper_identifier, scraper in SCRAPERS.items()
+            if scraper_identifier not in exclude_scrapers
+        }
     elif isinstance(scrapers, Set):
         scrapers = {
             scraper_identifier: scraper
             for scraper_identifier, scraper in SCRAPERS.items()
-            if scraper_identifier in scrapers
+            if scraper_identifier in scrapers and scraper_identifier not in exclude_scrapers
         }
 
     html_directory = Path(html_directory)

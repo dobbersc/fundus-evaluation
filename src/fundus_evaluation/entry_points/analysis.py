@@ -18,6 +18,9 @@ def analysis(
     complexity_path: Union[str, Path, None] = None,
     rouge_lsum_path: Union[str, Path, None] = None,
 ) -> None:
+    output_directory = Path(output_directory)
+    output_directory.mkdir(parents=True, exist_ok=True)
+
     if complexity_path is not None:
         complexity: pd.DataFrame = pd.read_csv(complexity_path, sep="\t")
         if complexity.isna().any(axis=None):

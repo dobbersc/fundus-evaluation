@@ -22,7 +22,7 @@ pip install ./fundus-evaluation
 This installation also contains the dataset and evaluation results.
 If you only are interested in the Python package directly (without the dataset and evaluation results), install the `fundus-evaluation` package directly from GitHub using pip:
 
-```
+```bash
 pip install git+https://github.com/dobbersc/fundus-evaluation.git@master
 ```
 
@@ -54,16 +54,18 @@ The evaluation results may be reproduced using the package's command line interf
 $ evaluate --help
 usage: evaluate [-h] [--version] {complexity,scrape,score,analysis} ...
 
-positional arguments:
-  {complexity,scrape,score,analysis}
-    complexity          TODO
-    scrape              TODO
-    score               TODO
-    analysis            TODO
-
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
+
+Fundus News Scraper Evaluation:
+  select evaluation pipeline step
+
+  {complexity,scrape,score,analysis}
+    complexity          calculate the page complexity scores
+    scrape              scrape extractions on the evaluation dataset
+    score               calculate evaluation scores
+    analysis            generate tables and plots
 ```
 
 Each entry point also provides its help page, e.g. with `evaluate scrape --help`.

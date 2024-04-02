@@ -61,7 +61,7 @@ def call_analysis(args: argparse.Namespace) -> None:
 def add_complexity(subparsers: Any) -> None:
     scrape = subparsers.add_parser(
         "complexity",
-        help="TODO",
+        help="calculate the page complexity scores",
         description="TODO",
         formatter_class=RawTextArgumentDefaultsHelpFormatter,
     )
@@ -75,7 +75,7 @@ def add_complexity(subparsers: Any) -> None:
 def add_scrape(subparsers: Any) -> None:
     scrape = subparsers.add_parser(
         "scrape",
-        help="TODO",
+        help="scrape extractions on the evaluation dataset",
         description="TODO",
         formatter_class=RawTextArgumentDefaultsHelpFormatter,
     )
@@ -95,7 +95,7 @@ def add_scrape(subparsers: Any) -> None:
 def add_score(subparsers: Any) -> None:
     score = subparsers.add_parser(
         "score",
-        help="TODO",
+        help="calculate evaluation scores",
         description="TODO",
         formatter_class=RawTextArgumentDefaultsHelpFormatter,
     )
@@ -113,7 +113,7 @@ def add_score(subparsers: Any) -> None:
 def add_analysis(subparsers: Any) -> None:
     score = subparsers.add_parser(
         "analysis",
-        help="TODO",
+        help="generate tables and plots",
         description="TODO",
         formatter_class=RawTextArgumentDefaultsHelpFormatter,
     )
@@ -128,7 +128,12 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(formatter_class=RawTextArgumentDefaultsHelpFormatter)
     parser.add_argument("--version", action="version", version=f"%(prog)s {fundus_evaluation.__version__}")
 
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers = parser.add_subparsers(
+        dest="command",
+        required=True,
+        title="Fundus News Scraper Evaluation",
+        description="select evaluation pipeline step",
+    )
     add_complexity(subparsers)
     add_scrape(subparsers)
     add_score(subparsers)

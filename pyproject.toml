@@ -45,6 +45,7 @@ dependencies = [
     # Scorer dependencies
     "jiwer==3.0.3",
     "rouge-score==0.1.2",
+    "sacrebleu==2.4.2",
 ]
 
 [project.urls]

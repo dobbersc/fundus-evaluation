@@ -33,7 +33,8 @@ class Scorer(Protocol):
         reference_articles: Dict[str, EvaluationArticle],
         hypothesis_articles: Dict[str, EvaluationArticle],
         max_optional_paragraphs: Optional[int] = None,
-    ) -> pd.DataFrame: ...
+    ) -> pd.DataFrame:
+        ...
 
 
 @dataclasses.dataclass
@@ -164,3 +165,58 @@ def score_rouge_lsum(
         rouge_scores["f1_score"].append(best_score.fmeasure)
 
     return pd.DataFrame(rouge_scores, index=pd.Index(reference_articles, name="article"))
+
+
+def score_bleu_article(
+    reference_articles: Dict[str, EvaluationArticle],
+    hypothesis_articles: Dict[str, EvaluationArticle],
+    max_optional_paragraphs: Optional[int] = None,
+) -> pd.DataFrame:
+    from sacrebleu import BLEU
+
+    assert reference_articles.keys() == hypothesis_articles.keys()
+
+    bleu: BLEU = BLEU(effective_order=True)
+
+    bleu_scores: List[float] = []
+    for reference_article, hypothesis_article in zip(reference_articles.values(), hypothesis_articles.values()):
+        reference_bodies: List[str] = [
+            "\n\n".join(body) for body in get_reference_bodies(reference_article["body"], max_optional_paragraphs)
+        ]
+        hypothesis_body: str = "\n\n".join(hypothesis_article["body"])
+
+        score: float = bleu.sentence_score(hypothesis=hypothesis_body, references=reference_bodies).score
+        bleu_scores.append(score / 100)
+
+    return pd.DataFrame({"bleu_article": bleu_scores}, index=pd.Index(reference_articles, name="article"))
+
+
+def score_bleu_corpus(
+    reference_articles: Dict[str, EvaluationArticle],
+    hypothesis_articles: Dict[str, EvaluationArticle],
+    max_optional_paragraphs: Optional[int] = None,
+) -> pd.DataFrame:
+    import nltk.translate.bleu_score
+    from sacrebleu import BLEU
+
+    assert reference_articles.keys() == hypothesis_articles.keys()
+
+    reference_bodies: List[List[str]] = [
+        ["\n\n".join(body) for body in get_reference_bodies(reference_article["body"], max_optional_paragraphs)]
+        for reference_article in reference_articles.values()
+    ]
+    hypothesis_bodies: List[str] = [
+        "\n\n".join(hypothesis_article["body"]) for hypothesis_article in hypothesis_articles.values()
+    ]
+
+    bleu: BLEU = BLEU()
+    score_sacremoses: float = bleu.corpus_score(hypotheses=hypothesis_bodies, references=reference_bodies).score
+    score_nltk: float = nltk.translate.bleu_score.corpus_bleu(
+        hypotheses=hypothesis_bodies, list_of_references=reference_bodies
+    )
+
+    # Since BLEU has been designed as a corpus score, we only return the final metric for the corpus.
+    return pd.DataFrame(
+        {"bleu_corpus (sacremoses)": [score_sacremoses / 100], "bleu_corpus (nltk)": [score_nltk]},
+        index=pd.Index(["ALL"], name="article"),
+    )

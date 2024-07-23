@@ -27,6 +27,7 @@ classifiers = [
 keywords = ["web scraping", "web crawling", "evaluation"]
 dependencies = [
     "more-itertools==9.1.0",
+    "numpy<=2.0.0",
     "pandas==2.0.3",
     "resiliparse==0.14.5",
     "seaborn==0.13.2",

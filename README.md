@@ -62,7 +62,7 @@ Fundus News Scraper Evaluation:
   select evaluation pipeline step
 
   {complexity,scrape,score,analysis}
-    complexity          calculate the page complexity scores
+    complexity          calculate page complexity scores
     scrape              scrape extractions on the evaluation dataset
     score               calculate evaluation scores
     analysis            generate tables and plots
@@ -93,8 +93,8 @@ evaluate scrape \
 ```
 
 To restrict the scrapers that are part of the evaluation, 
-  - use the `--scrapers` flag to explicitly specify a list of evaluation scrapers, 
-  - or use the `--exclude-scrapers` flag to exclude scrapers from the evaluation.
+  - use the `--scrapers` option to explicitly specify a list of evaluation scrapers, 
+  - or use the `--exclude-scrapers` option to exclude scrapers from the evaluation.
 
 E.g. to exclude BoilerNet, as this scraper is very resource intensive, add the `--exclude-scrapers boilernet` argument to the command above.
 

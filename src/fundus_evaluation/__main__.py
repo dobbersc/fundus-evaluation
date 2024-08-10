@@ -61,34 +61,84 @@ def call_analysis(args: argparse.Namespace) -> None:
 def add_complexity(subparsers: Any) -> None:
     scrape = subparsers.add_parser(
         "complexity",
-        help="calculate the page complexity scores",
-        description="TODO",
+        help="calculate page complexity scores",
         formatter_class=RawTextArgumentDefaultsHelpFormatter,
     )
     scrape.set_defaults(func=call_complexity)
 
-    scrape.add_argument("-t", "--ground-truth-path", type=Path, required=True, help="TODO")
-    scrape.add_argument("-d", "--html-directory", type=Path, required=True, help="TODO")
-    scrape.add_argument("-o", "--output-path", type=Path, required=True, help="TODO")
+    scrape.add_argument(
+        "-t",
+        "--ground-truth-path",
+        type=Path,
+        required=True,
+        help="path to the dataset's ground truth file",
+    )
+    scrape.add_argument(
+        "-d",
+        "--html-directory",
+        type=Path,
+        required=True,
+        help=(
+            "path to dataset's HTML directory containing compressed HTML files "
+            "corresponding to ground truth article extractions"
+        ),
+    )
+    scrape.add_argument(
+        "-o",
+        "--output-path",
+        type=Path,
+        required=True,
+        help="path to save the complexity scores as TSV",
+    )
 
 
 def add_scrape(subparsers: Any) -> None:
     scrape = subparsers.add_parser(
         "scrape",
         help="scrape extractions on the evaluation dataset",
-        description="TODO",
         formatter_class=RawTextArgumentDefaultsHelpFormatter,
     )
     scrape.set_defaults(func=call_scrape)
 
-    scrape.add_argument("-t", "--ground-truth-path", type=Path, required=True, help="TODO")
-    scrape.add_argument("-d", "--html-directory", type=Path, required=True, help="TODO")
-    scrape.add_argument("-o", "--output-directory", type=Path, required=True, help="TODO")
     scrape.add_argument(
-        "-s", "--scrapers", nargs="+", choices=fundus_evaluation.SCRAPERS.keys(), default=None, help="TODO"
+        "-t",
+        "--ground-truth-path",
+        type=Path,
+        required=True,
+        help="path to the dataset's ground truth file",
     )
     scrape.add_argument(
-        "-e", "--exclude-scrapers", nargs="+", choices=fundus_evaluation.SCRAPERS.keys(), default=set(), help="TODO"
+        "-d",
+        "--html-directory",
+        type=Path,
+        required=True,
+        help=(
+            "path to dataset's HTML directory containing compressed HTML files "
+            "corresponding to ground truth article extractions"
+        ),
+    )
+    scrape.add_argument(
+        "-o",
+        "--output-directory",
+        type=Path,
+        required=True,
+        help="directory to save the scrapers extractions as <scraper_name>.json",
+    )
+    scrape.add_argument(
+        "-s",
+        "--scrapers",
+        nargs="+",
+        choices=fundus_evaluation.SCRAPERS.keys(),
+        default=None,
+        help="effective scrapers for the evaluation; per default, all available scrapers will be included",
+    )
+    scrape.add_argument(
+        "-e",
+        "--exclude-scrapers",
+        nargs="+",
+        choices=fundus_evaluation.SCRAPERS.keys(),
+        default=set(),
+        help="excluded scrapers from the evaluation; per default, no scrapers will be excluded",
     )
 
 
@@ -96,32 +146,77 @@ def add_score(subparsers: Any) -> None:
     score = subparsers.add_parser(
         "score",
         help="calculate evaluation scores",
-        description="TODO",
         formatter_class=RawTextArgumentDefaultsHelpFormatter,
     )
     score.set_defaults(func=call_score)
 
-    score.add_argument("-t", "--ground-truth-path", type=Path, required=True, help="TODO")
-    score.add_argument("-e", "--extractions-directory", type=Path, required=True, help="TODO")
-    score.add_argument("-o", "--output-directory", type=Path, required=True, help="TODO")
     score.add_argument(
-        "-s", "--scorers", nargs="+", choices=fundus_evaluation.SCORERS.keys(), default=None, help="TODO"
+        "-t",
+        "--ground-truth-path",
+        type=Path,
+        required=True,
+        help="path to the dataset's ground truth file",
     )
-    score.add_argument("-p", "--max-optional-paragraphs", type=none_or_int, default=4, help="TODO")
+    score.add_argument(
+        "-e",
+        "--extractions-directory",
+        type=Path,
+        required=True,
+        help="directory of the scraper's extractions, e.g. obtained from the 'scrape' entry point",
+    )
+    score.add_argument(
+        "-o",
+        "--output-directory",
+        type=Path,
+        required=True,
+        help="directory to save the evaluation scores as <scorer_name>.tsv",
+    )
+    score.add_argument(
+        "-s",
+        "--scorers",
+        nargs="+",
+        choices=fundus_evaluation.SCORERS.keys(),
+        default=None,
+        help="effective scorers for the evaluation; per default, all available scorers will be included",
+    )
+    score.add_argument(
+        "-p",
+        "--max-optional-paragraphs",
+        type=none_or_int,
+        default=4,
+        help="maximum number of variants of optional paragraphs from its powerset to include in the score calculation",
+    )
 
 
 def add_analysis(subparsers: Any) -> None:
     score = subparsers.add_parser(
         "analysis",
         help="generate tables and plots",
-        description="TODO",
         formatter_class=RawTextArgumentDefaultsHelpFormatter,
     )
     score.set_defaults(func=call_analysis)
 
-    score.add_argument("-o", "--output-directory", type=Path, required=True, help="TODO")
-    score.add_argument("-c", "--complexity-path", type=Path, default=None, help="TODO")
-    score.add_argument("-r", "--rouge-lsum-path", type=Path, default=None, help="TODO")
+    score.add_argument(
+        "-o",
+        "--output-directory",
+        type=Path,
+        required=True,
+        help="directory to save the analysis results",
+    )
+    score.add_argument(
+        "-c",
+        "--complexity-path",
+        type=Path,
+        default=None,
+        help="path to calculated complexity scores as TSV",
+    )
+    score.add_argument(
+        "-r",
+        "--rouge-lsum-path",
+        type=Path,
+        default=None,
+        help="path to calculated ROUGE-LSum scores as TSV",
+    )
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:

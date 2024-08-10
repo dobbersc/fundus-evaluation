@@ -43,6 +43,7 @@ def load_model():
     if not _model:
         _model = tf.keras.models.load_model(os.path.join(BOILERNET_ROOT_PATH, "model.h5"))
         nltk.download("punkt", quiet=True)
+        nltk.download("punkt_tab", quiet=True)
         with open(os.path.join(BOILERNET_ROOT_PATH, "words.json")) as f:
             _word_map = json.load(f)
         with open(os.path.join(BOILERNET_ROOT_PATH, "tags.json")) as f:

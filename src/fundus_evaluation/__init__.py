@@ -5,7 +5,7 @@ import fundus_evaluation
 from fundus_evaluation.scorers import Scorer
 from fundus_evaluation.scrapers import Scraper
 
-__version__ = "1.0.0"
+__version__: Final[str] = "0.1.0"
 
 SCRAPER_PREFIX: Final[str] = "scrape_"
 SCRAPERS: Dict[str, Scraper] = {

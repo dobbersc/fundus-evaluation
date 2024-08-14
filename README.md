@@ -151,6 +151,20 @@ The table is sorted in descending order over the F1-score:
 | [BoilerNet](https://github.com/dobbersc/fundus-evaluation/tree/master/src/fundus_evaluation/scrapers/boilernet) | 84.73<sub>±20.82</sub>    | 90.66<sub>±21.05</sub>    | 85.77<sub>±20.28</sub>    | /           |
 | [Boilerpipe](https://github.com/kohlschutter/boilerpipe)                                                        | 82.89<sub>±20.65</sub>    | 82.11<sub>±29.99</sub>    | 79.90<sub>±25.86</sub>    | 1.3.0       |
 
+## Contributing
+
+We encourage contributions, particularly those involving competitive news scrapers. For example, you can contribute by:
+
+- **Submitting a New Scraper:** Open an issue or submit a pull request to incorporate your scraper into our evaluation pipeline. We will review and integrate new submissions as appropriate.
+- **Updating an Existing Scraper:** Please inform us if a supported scraper has undergone significant updates. We are open to re-evaluating our results accordingly. (Previous evaluation results are available on our [Release Page](https://github.com/dobbersc/fundus-evaluation/releases).)
+
+*Note: We also appreciate contributions to the [Fundus](https://github.com/flairNLP/fundus) library!*
+
+## Questions and Support
+
+Please open an issue for unresolved questions about our paper or the evaluation in this repository.
+For questions about the general functionality or bug reports regarding [Fundus](https://github.com/flairNLP/fundus) please refer to our main repository and submit an issue.
+
 ## Cite
 
 Please cite the following [paper](https://arxiv.org/abs/2403.15279) when using Fundus or building upon our work:

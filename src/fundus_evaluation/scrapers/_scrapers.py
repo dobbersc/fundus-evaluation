@@ -11,8 +11,7 @@ class Scraper(Protocol):
 
     __name__: str
 
-    def __call__(self, *, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]:
-        ...
+    def __call__(self, *, url: str, html: str, publisher_identifier: str, crawl_date: datetime) -> List[str]: ...
 
 
 def normalize(scraper: Scraper) -> Scraper:

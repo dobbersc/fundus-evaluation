@@ -1,12 +1,12 @@
 # Fundus News Scraper Evaluation
 
-This repository contains the evaluation code and dataset to reproduce the results from the [paper](https://arxiv.org/abs/2403.15279) "FUNDUS: A Simple-to-Use News Scraper Optimized for High Quality Extractions".
+This repository contains the evaluation code and dataset to reproduce the results from the [paper](https://aclanthology.org/2024.acl-demos.29/) "Fundus: A Simple-to-Use News Scraper Optimized for High Quality Extractions".
 
 [Fundus](https://github.com/flairNLP/fundus) is a user-friendly news scraper that enables users to obtain millions of high-quality news articles with just a few lines of code.
 
 In the following sections, we provide instructions to reproduce the comparative evaluation of Fundus against prominent scraping libraries.
 Our evaluation shows that Fundus yields significantly higher quality extractions (complete and artifact-free news articles) than comparable news scrapers.
-For a more in-depth overview of Fundus, the evaluation practises, and its results, consult the [result summary](https://github.com/dobbersc/fundus-evaluation/tree/master?tab=readme-ov-file#results) and our [paper](https://arxiv.org/abs/2403.15279).
+For a more in-depth overview of Fundus, the evaluation practises, and its results, consult the [result summary](https://github.com/dobbersc/fundus-evaluation/tree/master?tab=readme-ov-file#results) and our [paper](https://aclanthology.org/2024.acl-demos.29/).
 
 ## Prerequisites
 
@@ -188,16 +188,26 @@ For questions about the general functionality or bug reports regarding [Fundus](
 
 ## Cite
 
-Please cite the following [paper](https://arxiv.org/abs/2403.15279) when using Fundus or building upon our work:
+Please cite the following [paper](https://aclanthology.org/2024.acl-demos.29/) when using Fundus or building upon our work:
 
 ```bibtex
-@misc{dallabetta2024fundus,
-      title={Fundus: A Simple-to-Use News Scraper Optimized for High Quality Extractions}, 
-      author={Max Dallabetta and Conrad Dobberstein and Adrian Breiding and Alan Akbik},
-      year={2024},
-      eprint={2403.15279},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@inproceedings{dallabetta-etal-2024-fundus,
+    title = "Fundus: A Simple-to-Use News Scraper Optimized for High Quality Extractions",
+    author = "Dallabetta, Max  and
+      Dobberstein, Conrad  and
+      Breiding, Adrian  and
+      Akbik, Alan",
+    editor = "Cao, Yixin  and
+      Feng, Yang  and
+      Xiong, Deyi",
+    booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.acl-demos.29",
+    pages = "305--314",
+    abstract = "This paper introduces Fundus, a user-friendly news scraper that enables users to obtain millions of high-quality news articles with just a few lines of code. Unlike existing news scrapers, we use manually crafted, bespoke content extractors that are specifically tailored to the formatting guidelines of each supported online newspaper. This allows us to optimize our scraping for quality such that retrieved news articles are textually complete and without HTML artifacts. Further, our framework combines both crawling (retrieving HTML from the web or large web archives) and content extraction into a single pipeline. By providing a unified interface for a predefined collection of newspapers, we aim to make Fundus broadly usable even for non-technical users. This paper gives an overview of the framework, discusses our design choices, and presents a comparative evaluation against other popular news scrapers. Our evaluation shows that Fundus yields significantly higher quality extractions (complete and artifact-free news articles) than prior work.The framework is available on GitHub under https://github.com/flairNLP/fundus and can be simply installed using pip.",
 }
 ```
 

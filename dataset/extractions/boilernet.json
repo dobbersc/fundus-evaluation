@@ -66,7 +66,9 @@
     },
     "APNews_3.html.gz": {
         "url": "https://apnews.com/sports/college-basketball-mens-college-basketball-illinois-aaeb44ca598744658d879628c820cd2e",
-        "body": [],
+        "body": [
+            "Damarco Minor led the Cougars (16-14, 9-8), finishing with 24 points and 11 rebounds. Lamar Wright added 15 points and 12 rebounds for SIU-Edwardsville. Shamar Wright also had 10 points, eight rebounds and three steals."
+        ],
         "crawl_date": "2024-02-28 13:06:45.295338"
     },
     "APNews_4.html.gz": {
@@ -3362,6 +3364,7 @@
     "TheNation_3.html.gz": {
         "url": "https://www.thenation.com/article/politics/michigan-primary-analysis-biden-gaza/",
         "body": [
+            "Michigan Voters Made It Clear: Biden’s Gaza Policy Threatens His Reelection",
             "The “Uncommitted” vote was a measure of frustration with Biden’s stance on Gaza, and it was up dramatically from past primaries.",
             "The last time an incumbent Democratic president ran in a Michigan presidential primary,",
             "20,833 Democrats",
@@ -3431,7 +3434,8 @@
             "For the fourth time since January, Congress is facing a deadline to fund essential spending priorities. The House GOP has neither shame nor sense of responsibility.",
             "Chris Lehmann",
             "I Was Banned From CPAC, but the Extremists Weren’t",
-            "I Was Banned From CPAC, but the Extremists Weren’t"
+            "I Was Banned From CPAC, but the Extremists Weren’t",
+            "From the lobby, I watched neo-Nazis and other far-right figures waltz unimpeded into Conservative Political Action Conference."
         ],
         "crawl_date": "2024-02-29 15:56:09.093939"
     },

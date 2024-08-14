@@ -9,6 +9,7 @@ Our evaluation shows that Fundus yields significantly higher quality extractions
 For a more in-depth overview of Fundus, the evaluation practises, and its results, consult the [result summary](https://github.com/dobbersc/fundus-evaluation/tree/master?tab=readme-ov-file#results) and our [paper](https://arxiv.org/abs/2403.15279).
 
 ## Prerequisites
+
 Fundus and this evaluation repository require Python 3.8 or later and Java for the Boilerpipe scraper.
 *(Note: The evaluation was tested and performed using Python 3.8 and Java JDK 17.0.10.)*
 
@@ -138,8 +139,26 @@ evaluate analysis --complexity-path dataset/complexity.tsv --output-directory da
 
 ## Results
 
-The following table summarizes the overall performance of Fundus and evaluated scrapers in terms of averaged ROUGE-LSum precision, recall and F1-score and their standard deviation. 
+The following table summarizes the overall performance of Fundus and evaluated scrapers in terms of averaged ROUGE-LSum precision, recall and F1-score and their standard deviation.
+In addition, we provide the scrapers' versions at their evaluation time.
 The table is sorted in descending order over the F1-score:
+
+#### Fundus-Evaluation v0.2.0 
+
+| **Scraper**                                                                                                     | **Precision**             | **Recall**                | **F1-Score**              | **Version** |
+|-----------------------------------------------------------------------------------------------------------------|:--------------------------|---------------------------|---------------------------|-------------|
+| [Fundus](https://github.com/flairNLP/fundus)                                                                    | **99.89**<sub>±0.57</sub> | 96.75<sub>±12.75</sub>    | **97.69**<sub>±9.75</sub> | 0.4.1       |
+| [Trafilatura](https://github.com/adbar/trafilatura)                                                             | 93.91<sub>±12.89</sub>    | 96.85<sub>±15.69</sub>    | 93.62<sub>±16.73</sub>    | 1.12.0      |
+| [news-please](https://github.com/fhamborg/news-please)                                                          | 97.95<sub>±10.08</sub>    | 91.89<sub>±16.15</sub>    | 93.39<sub>±14.52</sub>    | 1.6.13      |
+| [BTE](https://github.com/dobbersc/fundus-evaluation/blob/master/src/fundus_evaluation/scrapers/bte.py)          | 81.09<sub>±19.41</sub>    | **98.23**<sub>±8.61</sub> | 87.14<sub>±15.48</sub>    | /           |
+| [jusText](https://github.com/miso-belica/jusText)                                                               | 86.51<sub>±18.92</sub>    | 90.23<sub>±20.61</sub>    | 86.96<sub>±19.76</sub>    | 3.0.1       |
+| [BoilerNet](https://github.com/dobbersc/fundus-evaluation/tree/master/src/fundus_evaluation/scrapers/boilernet) | 85.96<sub>±18.55</sub>    | 91.21<sub>±19.15</sub>    | 86.52<sub>±18.03</sub>    | /           |
+| [Boilerpipe](https://github.com/kohlschutter/boilerpipe)                                                        | 82.89<sub>±20.65</sub>    | 82.11<sub>±29.99</sub>    | 79.90<sub>±25.86</sub>    | 1.3.0       |
+
+<details>
+<summary>Previous Results</summary>
+
+#### Fundus-Evaluation v0.1.0 
 
 | **Scraper**                                                                                                     | **Precision**             | **Recall**                | **F1-Score**              | **Version** |
 |-----------------------------------------------------------------------------------------------------------------|:--------------------------|---------------------------|---------------------------|-------------|
@@ -150,6 +169,8 @@ The table is sorted in descending order over the F1-score:
 | [news-please](https://github.com/fhamborg/news-please)                                                          | 92.26<sub>±12.40</sub>    | 86.38<sub>±27.59</sub>    | 85.81<sub>±23.29</sub>    | 1.5.44      |
 | [BoilerNet](https://github.com/dobbersc/fundus-evaluation/tree/master/src/fundus_evaluation/scrapers/boilernet) | 84.73<sub>±20.82</sub>    | 90.66<sub>±21.05</sub>    | 85.77<sub>±20.28</sub>    | /           |
 | [Boilerpipe](https://github.com/kohlschutter/boilerpipe)                                                        | 82.89<sub>±20.65</sub>    | 82.11<sub>±29.99</sub>    | 79.90<sub>±25.86</sub>    | 1.3.0       |
+
+</details>
 
 ## Contributing
 
